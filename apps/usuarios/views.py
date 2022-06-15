@@ -1,7 +1,7 @@
 from email import message
 from unicodedata import name
 from urllib import response
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import auth, messages
 from receitas.models import Receita
@@ -9,6 +9,7 @@ from receitas.models import Receita
 
 
 def cadastro(request):
+    """Cadastra uma nova pessoa no sistema"""
     if request.method == 'POST':
         nome = request.POST['nome']
         email = request.POST['email']
@@ -41,6 +42,7 @@ def cadastro(request):
 
 
 def login(request):
+    """Realiza o log-in de uma pessoa no sistema"""
     if request.method == 'POST':
         email = request.POST['email']
         senha = request.POST['senha']
@@ -59,10 +61,12 @@ def login(request):
 
 
 def logout(request):
+    """Deslogar o cliente"""
     auth.logout(request)
     return(redirect('index'))
 
 def dashboard(request):
+    """Exibir a dashboard caso o usuário esteja autenticado"""
     if request.user.is_authenticated:
         id = request.user.id
         receitas = Receita.objects.order_by('-data_receita').filter(pessoa=id)
@@ -71,29 +75,14 @@ def dashboard(request):
             'receitas': receitas
         }
         
-        return render(request, 'usuarios/dashboard.html')
+        return render(request, 'usuarios/dashboard.html', dados)
     else:
         return redirect('index')
 
-def cria_receita(request):
-    if request.method == 'POST':
-        nome_receita = request.POST['nome_receita']
-        ingredientes = request.POST['ingredientes']
-        modo_preparo = request.POST['modo_preparo']
-        tempo_preparo = request.POST['tempo_preparo']
-        rendimento = request.POST['rendimento']
-        categoria = request.POST['categoria']
-        foto_receita = request.FILES['foto_receita']
-        user = get_object_or_404(User, pk=request.user.id)
-        receita = Receita.objects.create(pessoa=user, nome_receita = nome_receita, ingredientes=ingredientes, modo_preparo=modo_preparo,
-        tempo_preparo=tempo_preparo, rendimento= rendimento, categoria=categoria, foto_receita=foto_receita)
-        receita.save()
-        redirect('dashboard')
-    return render(request, "usuarios/cria_receita.html")
-
-
 def campo_vazio(campo):
+    """Verifica se o valor é vazio"""
     return not campo.strip()
 
 def comparar_igualdade_senhas(senha1, senha2):
+    """Compara os valores dos campos de senha no cadastro"""
     return senha1 != senha2

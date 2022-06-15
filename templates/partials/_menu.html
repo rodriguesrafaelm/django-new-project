@@ -38,7 +38,7 @@
                         <nav class="classy-navbar justify-content-between" id="deliciousNav">
     
                             <!-- Logo -->
-                            <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/logo.png' %}" alt=""></a>
+                            <a class="nav-brand" href="{% url 'index' %}"><img src="{% static 'img/core-img/logo1.png' %}" alt=""></a>
     
                             <!-- Navbar Toggler -->
                             <div class="classy-navbar-toggler">
@@ -56,16 +56,19 @@
                                 <!-- Nav Start -->
                                 <div class="classynav">
                                     <ul>
-                                        <li><a href="{% url 'index'%}">Main Page</a></li>
-                                        {% if user.is_authenticated%}
-                                        <li><a href="{% url 'dashboard' %}">Minhas receitas</a></li>
-                                        <li><a href="{% url 'cria_receita'%}">Criar receita</a></li>
-                                        <li><a href="{% url 'logout'%}">Logout</a></li>
+                                        {% if user.is_authenticated %}
+                                            <li><a href="{% url 'index' %}">Página principal</a></li>
+                                            <li><a href="{% url 'dashboard' %}">Minhas receitas</a></li>
+                                            <li><a href="{% url 'cria_receita' %}">Criar receita</a></li>
+                                            {% if user.is_superuser %}
+                                                <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                                            {% endif %}
+                                            <li><a href="{% url 'logout' %}">Logout</a></li>
                                         {% else %}
-                                        <li><a href="{% url 'cadastro'%}">Cadastro</a></li>
-                                        <li><a href="{% url 'login'%}">Login</a></li>
-                                        {% endif %}
-                                    </ul>
+                                            <li><a href="{% url 'cadastro' %}">Cadastro</a></li>
+                                            <li><a href="{% url 'login' %}">Login</a></li>
+                                        {%  endif %}
+                                  </ul>   
     
                                     <!-- Formulario de busca -->
                                     <div class="search-btn">
